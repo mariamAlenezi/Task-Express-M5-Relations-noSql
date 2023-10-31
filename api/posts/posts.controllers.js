@@ -28,7 +28,6 @@ exports.addTag = async (req, res, next) => {
 
     await tag.updateOne({ $push: { posts: post } });
     await post.updateOne({ $push: { tags: tag } });
-
     res.status(204).end();
   } catch (error) {
     next(error);

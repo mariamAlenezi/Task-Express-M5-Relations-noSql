@@ -28,6 +28,6 @@ router.delete("/:postId", postsDelete);
 
 router.put("/:postId", postsUpdate);
 
-router.post("/:postId", addTag);
+router.post("/:tagId/:postId", addTag);
 
 module.exports = router;
