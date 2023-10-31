@@ -1,4 +1,5 @@
-const Post = require('../../models/Post');
+const Post = require("../../models/Post");
+const Tag = require("../../models/tag");
 
 exports.fetchPost = async (postId, next) => {
   try {
@@ -9,10 +10,26 @@ exports.fetchPost = async (postId, next) => {
   }
 };
 
-exports.postsCreate = async (req, res) => {
+// exports.postsCreate = async (req, res) => {
+//   try {
+//     const newPost = await Post.create(req.body);
+//     res.status(201).json(newPost);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+exports.addTag = async (req, res, next) => {
   try {
-    const newPost = await Post.create(req.body);
-    res.status(201).json(newPost);
+    const { tagId, postId } = req.params;
+    const tag = await Tag.findbyid(tagId);
+    const post = await Post.findById(postId);
+    if (!tag || !post) res.status(404).json("tag or post not found");
+
+    await tag.updateOne({ $push: { posts: post } });
+    await post.updateOne({ $push: { tags: tag } });
+
+    res.status(204).end();
   } catch (error) {
     next(error);
   }
